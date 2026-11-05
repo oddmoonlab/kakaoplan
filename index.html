@@ -310,6 +310,23 @@ footer b{color:var(--ink)}
 @media (max-width:640px){.topicgrid,.contigrid,.mvrow{grid-template-columns:1fr}.se{grid-template-columns:1fr}.se .arrow{transform:rotate(90deg);height:30px}}
 
 /* ---- v5 ---- */
+.top .bar{padding-right:120px}
+.savesheet{position:fixed;inset:0;background:#0007;z-index:500;display:none;place-items:center;padding:20px}
+.savesheet.on{display:grid}
+.ssbox{background:#fff;border:2px solid var(--ink);border-radius:22px;padding:22px;width:min(520px,100%);max-height:90vh;overflow:auto;text-align:center}
+.ssbox>b{font-size:20px;font-weight:900}
+.ssname{font-size:13px;color:var(--sub);font-weight:700;margin:4px 0 12px;word-break:break-all}
+.ssbox img{max-width:100%;max-height:46vh;border:1.5px solid #0002;border-radius:12px;-webkit-touch-callout:default!important;-webkit-user-select:auto;user-select:auto}
+.ssbox p{font-size:13px;color:#444;font-weight:600;margin:10px 0 14px}
+.ssbtns{display:flex;gap:8px;justify-content:center}
+.ssbtns .btn{font-size:16px;padding:11px 22px}
+*{-webkit-tap-highlight-color:transparent}
+button,a,label{touch-action:manipulation}
+.pnpick{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin-top:8px}
+.pnpick span{font-size:13px;font-weight:700;color:var(--sub)}
+.pnpick button{border:1.5px solid var(--line);background:#fff;border-radius:999px;padding:6px 14px;font-size:14px;font-weight:800}
+.pnpick button.on{background:var(--ink);color:#fff}
+.tp i{background:var(--ink)!important;color:#fff!important;border-color:var(--ink)!important}
 .mailbtn{display:inline-grid;place-items:center;width:34px;height:34px;margin-left:6px;border:1.5px solid var(--line);border-radius:50%;background:#fff;color:var(--ink);padding:0}
 .mailbtn:active{background:var(--ink);color:#fff}
 .sub-h .subnote{background:none!important;color:var(--sub)!important;font-weight:600!important;min-width:0!important;padding:0!important}
@@ -446,6 +463,35 @@ footer b{color:var(--ink)}
 </style>
 </head>
 <body>
+<!-- ═══ ODDMOON LAB 카카오 작업실 연결: ← BACK 버튼 + 관리자 잠금 확인 ═══
+     MENU_ID : 카카오 작업실 관리자 패널의 메뉴 이름 (kakao-plan / kakao-outline)
+     꺼져 있으면 "아직 열리지 않았어요" 화면이 뜨고, 4초마다 다시 확인해요.
+     연결이 안 되면(인터넷 오류 등) 수업이 막히지 않게 그냥 열어 둬요. -->
+<style>
+#om-back{position:fixed;top:12px;right:14px;z-index:9000;display:inline-flex;align-items:center;gap:6px;background:#141412;color:#fff;text-decoration:none;font:800 14px/1 Inter,'Noto Sans KR',-apple-system,sans-serif;letter-spacing:1px;padding:11px 18px;border-radius:999px;box-shadow:0 3px 14px rgba(0,0,0,.22);-webkit-tap-highlight-color:transparent}
+#om-back:active{transform:scale(.96)}
+#om-locked{position:fixed;inset:0;z-index:8999;background:#f7f6f3;display:none;place-items:center;text-align:center;padding:30px;font-family:Inter,'Noto Sans KR',-apple-system,sans-serif;color:#141412}
+#om-locked b{display:block;font-size:24px;font-weight:900;margin-bottom:8px}
+#om-locked span{font-size:14px;color:#5c5b58}
+</style>
+<a id="om-back" href="/kakao/">← BACK</a>
+<div id="om-locked"><div><b>🔒 아직 열리지 않았어요</b><span>선생님이 수업 시간에 열어 드려요.</span></div></div>
+<script>
+(function(){
+  var MENU_ID = 'kakao-plan';
+  var URL_ = 'https://kgjbxhxknxgbmsihvshe.supabase.co', KEY = 'sb_publishable_1K_wet7KC7fq7aPn6vB5dQ_nldPYACn';
+  function check(){
+    fetch(URL_ + '/rest/v1/menu_state?select=is_open&id=eq.' + MENU_ID, { headers: { apikey: KEY, Authorization: 'Bearer ' + KEY } })
+      .then(function(r){ return r.ok ? r.json() : null; })
+      .then(function(rows){ var open = !(rows && rows[0] && rows[0].is_open === false);
+        document.getElementById('om-locked').style.display = open ? 'none' : 'grid'; })
+      .catch(function(){});
+  }
+  check(); setInterval(check, 4000);
+})();
+</script>
+<!-- ═══ 카카오 작업실 연결 끝 ═══ -->
+
 
 <div id="blocked"><div><b>열 수 없는 주소예요</b>이 페이지는 ODDMOON LAB 수업 공식 링크에서만 열립니다.</div></div>
 
@@ -457,7 +503,7 @@ footer b{color:var(--ink)}
   <nav class="stepnav" id="stepnav">
     <a href="#home" data-s="0">main</a>
     <a href="#s1" data-s="1"><em>1</em>테마</a>
-    <a href="#s2" data-s="2"><em>2</em>소재&amp;마인드맵</a>
+    <a href="#s2" data-s="2"><em>2</em>소재 &amp; 마인드맵</a>
     <a href="#s3" data-s="3"><em>3</em>콘티</a>
     <a href="#s9" data-s="9"><em>+</em>저장 · 불러오기</a>
   </nav>
@@ -471,7 +517,7 @@ footer b{color:var(--ink)}
     <p class="homesub">그리기 전에, 글로 먼저 기획해요.</p>
     <div class="goals">
       <button class="goal g1" data-go="s1"><b><span class="gl">테마</span> <span class="nw"><span class="gp" id="gTheme">0%</span> <span class="gl">진행</span></span></b><div class="gbar"><i id="bTheme"></i></div></button>
-      <button class="goal g2" data-go="s2"><b><span class="gl">소재&amp;마인드맵</span> <span class="nw"><span class="gp" id="gTopic">0%</span> <span class="gl">진행</span></span></b><small id="cTopic">0/24</small><div class="gbar"><i id="bTopic"></i></div></button>
+      <button class="goal g2" data-go="s2"><b><span class="gl">소재 &amp; 마인드맵</span> <span class="nw"><span class="gp" id="gTopic">0%</span> <span class="gl">진행</span></span></b><small id="cTopic">0/24</small><div class="gbar"><i id="bTopic"></i></div></button>
       <button class="goal g3" data-go="s3"><b><span class="gl">콘티</span> <span class="nw"><span class="gp" id="gConti">0%</span> <span class="gl">진행</span></span></b><small id="cConti">0/24</small><div class="gbar"><i id="bConti"></i></div></button>
     </div>
     
@@ -553,7 +599,8 @@ footer b{color:var(--ink)}
       <div class="q">
         <div class="qt"><i>Q</i>후보 3개 → 최종 1개</div>
         <div class="row3"><input type="text" data-k="pn1" placeholder="후보 1"><input type="text" data-k="pn2" placeholder="후보 2"><input type="text" data-k="pn3" placeholder="후보 3"></div>
-        <input type="text" data-k="pn" placeholder="최종 상품명" style="margin-top:8px;font-weight:800">
+        <div class="pnpick" id="pnPick"></div>
+        <input type="text" data-k="pn" placeholder="최종 상품명 (위 후보를 누르거나 직접 입력)" style="margin-top:8px;font-weight:800">
         <div class="hint" data-h="pn"></div>
       </div>
     </div>
@@ -568,13 +615,13 @@ footer b{color:var(--ink)}
       </div>
       <div class="hint" data-h="line"></div>
     </div>
-  <div class="nextrow"><button class="btn dark" data-go="s2">2번 소재&amp;마인드맵으로 →</button></div>
+  <div class="nextrow"><button class="btn dark" data-go="s2">2번 소재 &amp; 마인드맵으로 →</button></div>
   </section>
 
   <!-- ===================== 2. MINDMAP ===================== -->
   <section class="sec page" id="s2">
     <div class="sechead"><div class="bn">2</div><div>
-      <h2>소재&amp;마인드맵</h2>
+      <h2>소재 &amp; 마인드맵</h2>
       <p>메시지 24개 · 3번 콘티에 자동으로 들어가요</p>
     </div><button class="dlbtn" id="mmSave">⬇ 이미지 다운로드<small>마인드맵 한 장</small></button></div>
     <div class="fromtheme" id="fromtheme"></div>
@@ -639,6 +686,13 @@ footer b{color:var(--ink)}
   </footer>
 </main>
 
+<div class="savesheet" id="saveSheet"><div class="ssbox">
+  <b>파일이 준비됐어요</b>
+  <div class="ssname" id="saveSheetName"></div>
+  <img id="saveSheetImg" alt="" hidden>
+  <p id="saveSheetTip"></p>
+  <div class="ssbtns"><button class="btn dark" id="saveSheetGo">💾 저장하기</button><button class="btn" id="saveSheetClose">닫기</button></div>
+</div></div>
 <div class="toast" id="toast"></div>
 <div class="busy" id="busy">이미지 만드는 중…</div>
 
@@ -649,7 +703,7 @@ footer b{color:var(--ink)}
    DOMAIN_LOCK : true 로 바꾸면 oddmoonlab.github.io 주소에서만 열려요.
                  (미리보기·수정 중에는 false, 학생에게 줄 때 true)
    ========================================================= */
-const DOMAIN_LOCK = false;
+const DOMAIN_LOCK = true;
 const ALLOWED_HOSTS = ['oddmoonlab.github.io'];
 
 (function(){
@@ -797,7 +851,8 @@ const ALLOWED_HOSTS = ['oddmoonlab.github.io'];
   function renderFromTheme(){
     const c = themeCells();
     const rows = [['테마', c[0][1]], ['분위기', c[3][1]], ['좋아하는 것', V('likes')], ['싫어하는 것', V('dislikes')], ['버릇', V('habit')], ['쓰는 순간', c[2][1]]].filter(r => r[1]);
-    $('#fromtheme').innerHTML = rows.length ? '<b>💡 내 테마</b><br>' + rows.map(r => `<b>${r[0]}</b> ${esc(r[1])}`).join('<br>') : '<b>💡 내 테마</b> — 1번을 채우면 여기에 정리돼요.';
+    $('#fromtheme').innerHTML = rows.length ? '<b>💡 내 테마</b><br>' + rows.map(r => `<b>${r[0]}</b> ${esc(r[1])}`).join('<br>') : '';
+    $('#fromtheme').style.display = rows.length ? '' : 'none';
     renderKeywords();
   }
   function bindPicks(){
@@ -857,7 +912,7 @@ const ALLOWED_HOSTS = ['oddmoonlab.github.io'];
     e.target.parentElement.classList.toggle('filled', !!e.target.value.trim());
     renderMindmap(); syncContiTopics(); renderPick(); renderMvTitles(); updateCounts();
   });
-  const COVER = ['인사 (안녕·잘자)','대답 (네·알겠어)','거절 (싫어·안 돼)','고마움','미안함','사랑·애정','축하','응원·위로','웃음','슬픔','화남·짜증','놀람','재촉·기다림','밥·일상','캐릭터만의 개그','B급','방구','똥'];
+  const COVER = ['인사 (안녕·잘자)','대답 (네·알겠어)','거절 (싫어·안 돼)','고마움','미안함','사랑·애정','축하','응원·위로','웃음','슬픔','화남·짜증','놀람','재촉·기다림','밥·일상','캐릭터만의 개그','B급 개그 (방구·똥)'];
   function renderCover(){
     $('#cover').innerHTML = COVER.map(c => `<label class="${S.cover[c] ? 'on' : ''}"><input type="checkbox" data-cv="${c}" ${S.cover[c] ? 'checked' : ''}>${c}</label>`).join('');
   }
@@ -934,7 +989,7 @@ const ALLOWED_HOSTS = ['oddmoonlab.github.io'];
       <text x="${cx}" y="${y0 + 24}" text-anchor="middle" font-family="${FONT}" font-size="26" font-weight="800" fill="#FFD43B">메인 테마</text>
       ${nmL.map((s, k) => `<text x="${cx}" y="${y0 + 48 + 50 + k*62}" text-anchor="middle" font-family="${FONT}" font-size="52" font-weight="900" fill="#fff">${esc(s)}</text>`).join('')}
       ${sub.map((s, k) => `<text x="${cx}" y="${y0 + 48 + nmL.length*62 + 40 + k*34}" text-anchor="middle" font-family="${FONT}" font-size="26" font-weight="600" fill="#ddd">${esc(s)}</text>`).join('')}`;
-    const head = `<text x="60" y="64" font-family="${FONT}" font-size="30" font-weight="900" fill="#111">소재&amp;마인드맵</text>
+    const head = `<text x="60" y="64" font-family="${FONT}" font-size="30" font-weight="900" fill="#111">소재 &amp; 마인드맵</text>
       <text x="60" y="98" font-family="${FONT}" font-size="18" font-weight="600" fill="#888">소재 ${S.topics.filter(t => t.trim()).length}/24 · 1~24 번호는 콘티 번호와 같아요</text>
       <text x="${W-60}" y="${H-34}" text-anchor="end" font-family="${FONT}" font-size="16" font-weight="700" fill="#aaa">© ODDMOON LAB · 수강생 전용 · 무단 배포 금지</text>`;
     return {W, H, svg:`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${W} ${H}" width="${W}" height="${H}"><rect width="${W}" height="${H}" fill="#fff"/>${edges}${nodes}${center}${head}</svg>`};
@@ -1063,10 +1118,33 @@ const ALLOWED_HOSTS = ['oddmoonlab.github.io'];
     }
     return null;
   }
-  function downloadBlob(blob, name){
+  const IS_IOS = /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+  function plainDownload(blob, name){
     const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = name;
-    document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(a.href), 3000);
+    document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(a.href), 60000);
   }
+  let sheetUrl = null;
+  function downloadBlob(blob, name){
+    if (!IS_IOS) return plainDownload(blob, name);
+    // 아이패드: 저장 창을 띄우고, 버튼을 한 번 더 눌러 공유 시트(이미지 저장 · 파일에 저장)로 저장
+    const isImg = blob.type.startsWith('image/');
+    if (sheetUrl) URL.revokeObjectURL(sheetUrl);
+    sheetUrl = URL.createObjectURL(blob);
+    $('#saveSheetName').textContent = name;
+    $('#saveSheetImg').hidden = !isImg; if (isImg) $('#saveSheetImg').src = sheetUrl;
+    $('#saveSheetTip').textContent = isImg ? '저장하기 → "이미지 저장"(사진 앱) 또는 "파일에 저장"을 고르세요. 이미지를 길게 눌러 저장해도 돼요.' : '저장하기 → "파일에 저장"을 골라 원하는 폴더에 저장하세요.';
+    $('#saveSheetGo').onclick = async () => {
+      const file = new File([blob], name, {type: blob.type || 'application/octet-stream'});
+      try {
+        if (navigator.canShare && navigator.canShare({files:[file]})) { await navigator.share({files:[file]}); closeSheet(); toast('저장했어요'); return; }
+      } catch(err) { if (err && err.name === 'AbortError') return; }
+      plainDownload(blob, name); closeSheet(); toast("'파일' 앱 → 다운로드에 저장돼요");
+    };
+    $('#saveSheet').classList.add('on');
+  }
+  function closeSheet(){ $('#saveSheet').classList.remove('on'); }
+  $('#saveSheetClose').addEventListener('click', closeSheet);
+  $('#saveSheet').addEventListener('click', e => { if (e.target.id === 'saveSheet') closeSheet(); });
   async function exportCanvas(cv, kind){
     const blob = await new Promise(r => cv.toBlob(r, 'image/png'));
     const png = pngWithData(await blob.arrayBuffer(), JSON.stringify(S));
@@ -1074,7 +1152,7 @@ const ALLOWED_HOSTS = ['oddmoonlab.github.io'];
   }
   async function busyRun(fn, okMsg){
     $('#busy').classList.add('on');
-    try { try { await document.fonts.ready; } catch(e) {} await fn(); toast(okMsg); }
+    try { try { await document.fonts.ready; } catch(e) {} await fn(); if (!IS_IOS) toast(okMsg); }
     catch(e) { toast('저장 중 문제가 생겼어요. 다시 눌러 주세요'); }
     $('#busy').classList.remove('on');
   }
@@ -1175,7 +1253,7 @@ const ALLOWED_HOSTS = ['oddmoonlab.github.io'];
     const d = new Date(), stamp = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')} ${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`;
     const data = Object.assign({ _file:'ODDMOON LAB 이모티콘 기획 노트', _saved: stamp, _copyright:'© ODDMOON LAB · 유여진 — 수강생 개인 작업용' }, S);
     downloadBlob(new Blob([JSON.stringify(data, null, 2)], {type:'application/json'}), fileName('기획노트작업파일').replace(/\.png$/, '.json'));
-    toast('작업 파일을 저장했어요 (파일 앱 → 다운로드)');
+    if (!IS_IOS) toast('작업 파일을 저장했어요');
   }));
 
   /* ---------- 불러오기 ---------- */
@@ -1203,10 +1281,23 @@ const ALLOWED_HOSTS = ['oddmoonlab.github.io'];
     try { localStorage.removeItem(KEY); sessionStorage.removeItem(KEY + '_page'); } catch(e) {}
     $$('[data-k]').forEach(el => el.value = ''); $$('[data-c]').forEach(el => { el.checked = false; el.closest('li') && el.closest('li').classList.remove('done'); });
     $$('.pick button.on').forEach(b => b.classList.remove('on'));
-    renderConcepts(); renderThemeCard(); renderFromTheme(); runHints(); renderTopics(); renderCover(); renderMindmap(); renderConti(); updateCounts();
+    renderConcepts(); renderThemeCard(); renderFromTheme(); runHints(); renderTopics(); renderCover(); renderPnPick(); renderMindmap(); renderConti(); updateCounts();
     btn.textContent = '전체 지우기'; btn.removeAttribute('style'); resetArm = 0;
     toast('모두 지웠어요'); showPage('home');
   });
+
+  /* ---------- 상품명 후보 선택 ---------- */
+  function renderPnPick(){
+    const box = $('#pnPick'); if (!box) return;
+    const c = ['pn1','pn2','pn3'].map(V).filter(Boolean);
+    box.innerHTML = c.length ? '<span>최종으로 고르기 →</span>' + c.map(w => `<button data-pn="${esc(w)}" class="${V('pn') === w ? 'on' : ''}">${esc(w)}</button>`).join('') : '';
+  }
+  $('#pnPick').addEventListener('click', e => {
+    const b = e.target.closest('[data-pn]'); if (!b) return;
+    S.v.pn = b.dataset.pn; const inp = document.querySelector('[data-k="pn"]'); inp.value = S.v.pn;
+    save(); runHints(); renderThemeCard(); renderMindmap(); renderPnPick(); toast(`최종 상품명: ${S.v.pn}`);
+  });
+  ['pn1','pn2','pn3','pn'].forEach(k => document.querySelector(`[data-k="${k}"]`).addEventListener('input', () => setTimeout(renderPnPick, 0)));
 
   /* ---------- 메일 주소 복사 ---------- */
   const MAIL = 'oddmoonillust@naver.com';
@@ -1220,7 +1311,7 @@ const ALLOWED_HOSTS = ['oddmoonlab.github.io'];
 
   /* ---------- 시작 ---------- */
   bindFields(); bindPicks(); renderConcepts(); renderAgeTip(); runHints(); renderThemeCard(); renderFromTheme();
-  renderTopics(); renderCover(); renderMindmap(); renderConti(); renderPick(); renderMv(); updateCounts();
+  renderTopics(); renderCover(); renderPnPick(); renderMindmap(); renderConti(); renderPick(); renderMv(); updateCounts();
   let first = 'home'; try { first = sessionStorage.getItem(KEY + '_page') || 'home'; } catch(e) {}
   showPage(first, false);
 })();
